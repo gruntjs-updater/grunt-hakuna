@@ -1,0 +1,41 @@
+{
+  "name": "grunt-block-concat",
+  "description": "Concats files specified in blocks in HTML and replaces the reference to the new file. Uses an HTML parser rather than regex.",
+  "version": "0.1.0",
+  "homepage": "https://github.com/carols10cents/grunt-block-concat",
+  "author": {
+    "name": "Carol Nichols and Rob Wierzbowski",
+    "email": "carol.nichols@gmail.com, rob.wierzbowski@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/carols10cents/grunt-block-concat.git"
+  },
+  "bugs": {
+    "url": "https://github.com/carols10cents/grunt-block-concat/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/carols10cents/grunt-block-concat/blob/master/LICENSE-MIT"
+    }
+  ],
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "devDependencies": {
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-contrib-clean": "~0.4.0",
+    "grunt-contrib-nodeunit": "~0.2.0",
+    "grunt": "~0.4.2"
+  },
+  "peerDependencies": {
+    "grunt": "~0.4.2"
+  },
+  "keywords": [
+    "gruntplugin"
+  ]
+}
