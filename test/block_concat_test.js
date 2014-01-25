@@ -22,7 +22,7 @@ var grunt = require('grunt');
     test.ifError(value)
 */
 
-exports.block_concat = {
+exports.blockConcat = {
   setUp: function(done) {
     // setup here if necessary
     done();

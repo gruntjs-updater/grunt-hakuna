@@ -17,14 +17,16 @@ Once the plugin has been installed, it may be enabled inside your Gruntfile with
 grunt.loadNpmTasks('grunt-block-concat');
 ```
 
-## The "block_concat" task
+## The "blockConcat" task
+
+`blockConcat` parses your HTML file(s) with an HTML parser and looks for comments that surround a group of JavaScript or CSS references.
 
 ### Overview
-In your project's Gruntfile, add a section named `block_concat` to the data object passed into `grunt.initConfig()`.
+In your project's Gruntfile, add a section named `blockConcat` to the data object passed into `grunt.initConfig()`.
 
 ```js
 grunt.initConfig({
-  block_concat: {
+  blockConcat: {
     options: {
       // Task-specific options go here.
     },
@@ -56,7 +58,7 @@ In this example, the default options are used to do something with whatever. So 
 
 ```js
 grunt.initConfig({
-  block_concat: {
+  blockConcat: {
     options: {},
     files: {
       'dest/default_options': ['src/testing', 'src/123'],
@@ -70,7 +72,7 @@ In this example, custom options are used to do something else with whatever else
 
 ```js
 grunt.initConfig({
-  block_concat: {
+  blockConcat: {
     options: {
       separator: ': ',
       punctuation: ' !!!',
