@@ -33,19 +33,20 @@ module.exports = function(grunt) {
       default_options: {
         options: {
         },
-        files: {
-          'tmp/default_options': ['test/fixtures/testing', 'test/fixtures/123'],
-        },
+        files: [{
+          expand: true,
+          cwd: 'test/fixtures/project1',
+          src: '**/*.html',
+          dest: 'tmp/default_options'
+        }],
       },
-      custom_options: {
-        options: {
-          separator: ': ',
-          punctuation: ' !!!',
-        },
-        files: {
-          'tmp/custom_options': ['test/fixtures/testing', 'test/fixtures/123'],
-        },
-      },
+      // in_place: { // No dest
+        // files: [{
+        //   expand: true,
+        //   cwd: 'test/fixtures/project1',
+        //   src: '**/*.html',
+        // }],
+      // },
     },
 
     // Unit tests.

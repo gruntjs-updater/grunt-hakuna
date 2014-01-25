@@ -27,6 +27,8 @@ grunt.loadNpmTasks('grunt-block-concat');
 
 It assumes that your input filepaths are relative to `src` and your output files (both the HTML files with their references replaced and the results of concat) will be relative to `dest` in the task options.
 
+Any references to files that are not within a block will have the referenced files and HTML reference copied as-is to dest.
+
 ### Blocks
 
 The block configuration is similar to those in [usemin](https://github.com/yeoman/grunt-usemin#blocks), namely:
