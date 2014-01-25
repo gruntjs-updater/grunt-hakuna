@@ -19,7 +19,41 @@ grunt.loadNpmTasks('grunt-block-concat');
 
 ## The "blockConcat" task
 
-`blockConcat` parses your HTML file(s) with an HTML parser and looks for comments that surround a group of JavaScript or CSS references.
+`blockConcat` parses your HTML file(s) with an HTML parser and looks for comments that surround a group of JavaScript or CSS references. It will then:
+
+  1. Concat the files referenced in that block
+  1. Write the result to the one filename referenced in the block config
+  1. Replace the comments and references with one reference to the resulting file
+
+It assumes that your input filepaths are relative to `src` and your output files (both the HTML files with their references replaced and the results of concat) will be relative to `dest` in the task options.
+
+### Blocks
+
+The block configuration is similar to those in [usemin](https://github.com/yeoman/grunt-usemin#blocks), namely:
+
+```html
+<!-- build <path> -->
+... HTML Markup, list of script / link tags.
+<!-- endbuild -->
+```
+
+- **path**: the file path, including filename, of the resulting file (the target output of concat)
+
+An example of this in completed form can be seen below:
+
+```html
+<!-- build js/app.js -->
+<script src="js/app.js"></script>
+<script src="js/controllers/thing-controller.js"></script>
+<script src="js/models/thing-model.js"></script>
+<script src="js/views/thing-view.js"></script>
+<!-- endbuild -->
+```
+
+After running the task, this will be modified to be:
+```html
+<script src="js/app.js"></script>
+````
 
 ### Overview
 In your project's Gruntfile, add a section named `blockConcat` to the data object passed into `grunt.initConfig()`.
@@ -39,53 +73,42 @@ grunt.initConfig({
 
 ### Options
 
-#### options.separator
-Type: `String`
-Default value: `',  '`
-
-A string value that is used to do something with whatever.
-
-#### options.punctuation
-Type: `String`
-Default value: `'.'`
-
-A string value that is used to do something else with whatever else.
+There are no options at this time.
 
 ### Usage Examples
 
-#### Default Options
-In this example, the default options are used to do something with whatever. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result would be `Testing, 1 2 3.`
+Please see test/fixtures/project1 for an example project, and see test/expected/project1 for the output of running this blockConcat config on that project:
 
 ```js
 grunt.initConfig({
   blockConcat: {
-    options: {},
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
+    default_options: {
+      options: {
+      },
+      files: [{
+        expand: true,
+        cwd: 'test/fixtures/project1',
+        src: '**/*.html',
+        dest: 'tmp/default_options'
+      }],
     },
   },
 });
 ```
 
-#### Custom Options
-In this example, custom options are used to do something else with whatever else. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result in this case would be `Testing: 1 2 3 !!!`
+Other examples to come:
 
-```js
-grunt.initConfig({
-  blockConcat: {
-    options: {
-      separator: ': ',
-      punctuation: ' !!!',
-    },
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
-});
-```
+* In-place changes (by not specifying a `dest`)
+* Different search path (output of another build step)
+
+## Philosophy
+
+* **Do one thing and do it well**. This plugin only handles concatenation references rather than supporting a pipeline of actions to happen between reading the configuration and writing out the files.
+* **Trying to parse HTML with regex is brittle and bug-ridden**. [The center cannot hold](http://stackoverflow.com/questions/1732348/regex-match-open-tags-except-xhtml-self-contained-tags/1732454#1732454).
 
 ## Contributing
-In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
+
+We :heart: contributions of all kinds, including, but not limited to: documentation, bug reports, bug fixes, failing tests, passing tests, feature suggestions, and new features. We reserve the right to decline to add new functionality in order to keep this project light and reliable. We promise every issue or PR will get emoji. :sparkles:
 
 ## Release History
 _(Nothing yet)_
