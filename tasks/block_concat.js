@@ -7,8 +7,11 @@
  */
 
 'use strict';
+var path = require('path');
 
 module.exports = function(grunt) {
+  var blockConcat = require('./lib/block_concat').init(grunt);
+
 
   // Please see the Grunt documentation for more information regarding task
   // creation: http://gruntjs.com/creating-tasks
@@ -27,6 +30,11 @@ module.exports = function(grunt) {
         }
       });
 
+      src.forEach(function(htmlFile){
+        var newHTML = blockConcat.processHTML(htmlFile, path.dirname(f.dest));
+        grunt.file.write(f.dest, newHTML);
+        grunt.log.writeln('File "' + f.dest + '" created.');
+      });
     });
   });
 
