@@ -22,7 +22,6 @@ exports.init = function(grunt) {
     var htmlparser = require("htmlparser2");
 
     var concatFilename;
-    var concatFile = '';
     var files = [];
 
     var parser = new htmlparser.Parser({
@@ -52,15 +51,10 @@ exports.init = function(grunt) {
 
           }
 
-          files.forEach(function (f){
-            concatFile += grunt.file.read(path.join(inputDirectory, f)) + "\n\n";
-          });
-
-          grunt.file.write(path.join(outputDirectory, concatFilename), concatFile.trim());
+          concatFiles(files, concatFilename, inputDirectory, outputDirectory);
 
           files = [];
           exitBlock();
-          concatFile = '';
 
         } else {
 
@@ -163,6 +157,19 @@ exports.init = function(grunt) {
     var outputFilename = path.join(outputDirectory, name);
 
     grunt.file.write(outputFilename, grunt.file.read(inputFilename));
+  };
+
+  var concatFiles = function(files, concatFilename, inputDirectory, outputDirectory) {
+    var concatFileContents = [];
+
+    files.forEach(function (name) {
+      var inputFilename = path.join(inputDirectory, name);
+      concatFileContents.push(grunt.file.read(inputFilename));
+    });
+
+    var outputFilename = path.join(outputDirectory, concatFilename);
+    var separator = "\n\n";
+    grunt.file.write(outputFilename, concatFileContents.join(separator));
   };
 
   var toTag = function(name, attribs) {
