@@ -60,7 +60,7 @@ module.exports = function(grunt) {
       // },
     },
 
-    // Unit tests.
+    // Tests.
     nodeunit: {
       tests: ['test/*_test.js'],
     },
