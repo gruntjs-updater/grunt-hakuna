@@ -34,21 +34,9 @@ exports.init = function(grunt) {
         } else if(withinABlock() && endingBlockComment(data)) {
 
           if(withinAJavaScriptBlock()) {
-
-            output += toTag('script', {
-              type: 'text/javascript',
-              src:  concatFilename
-            });
-            output += toClosingTag('script');
-
+            output += javascriptTagFor(concatFilename);
           } else if(withinACssBlock()) {
-
-            output += toTag('link', {
-              rel:  "stylesheet",
-              href: concatFilename
-            });
-            output += toClosingTag('link');
-
+            output += cssTagFor(concatFilename);
           }
 
           concatFiles(files, concatFilename, inputDirectory, outputDirectory);
@@ -190,6 +178,20 @@ exports.init = function(grunt) {
 
   var toComment = function(data) {
     return '<!--' + data + '-->';
+  };
+
+  var javascriptTagFor = function(concatFilename) {
+    return toTag('script', {
+                  type: 'text/javascript',
+                  src:  concatFilename
+                }) + toClosingTag('script');
+  };
+
+  var cssTagFor = function(concatFilename) {
+    return toTag('link', {
+                  rel:  "stylesheet",
+                  href: concatFilename
+                }) + toClosingTag('link');
   };
 
   var javascriptOrStylesheetTag = function(name, attribs) {
