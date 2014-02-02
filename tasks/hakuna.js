@@ -18,6 +18,10 @@ module.exports = function(grunt) {
 
   grunt.registerMultiTask('hakuna', 'Concats files specified in blocks in HTML and replaces the reference to the new file. Uses an HTML parser rather than regex.', function() {
 
+    var options = this.options({
+      copyFiles: true
+    });
+
     // Iterate over all specified file groups.
     this.files.forEach(function(f) {
       var src = f.src.filter(function(filepath) {
@@ -34,7 +38,8 @@ module.exports = function(grunt) {
         var outputHTML = hakuna.processHTML({
           inputHTML:       grunt.file.read(htmlFile),
           inputDirectory:  path.dirname(htmlFile),
-          outputDirectory: path.dirname(f.dest)
+          outputDirectory: path.dirname(f.dest),
+          copyFiles:       options.copyFiles
         });
         grunt.file.write(f.dest, outputHTML);
         grunt.log.writeln('File "' + f.dest + '" created.');

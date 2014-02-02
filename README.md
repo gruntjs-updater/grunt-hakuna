@@ -77,7 +77,11 @@ grunt.initConfig({
 
 ### Options
 
-There are no options at this time.
+#### options.copyFiles
+Type: `Boolean`
+Default value: `true`
+
+By default, hakuna will concatenate multiple JavaScript or CSS files referenced within the same block into one file with the name specified in the block comment. If you would like to manage the copying and concatenation of the JavaScript or CSS files yourself, set this to `false`.
 
 ### Usage Examples
 

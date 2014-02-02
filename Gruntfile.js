@@ -38,6 +38,19 @@ module.exports = function(grunt) {
           dest: 'tmp/default_options'
         }],
       },
+      // Don't hate about my mixing camelcase and underscores. Think about it:
+      // IT MAKES SENSE
+      copyFiles_false: {
+        options: {
+          copyFiles: false,
+        },
+        files: [{
+          expand: true,
+          cwd: 'test/fixtures/project1',
+          src: '**/*.html',
+          dest: 'tmp/copyFiles_false'
+        }],
+      }
       // in_place: { // No dest
         // files: [{
         //   expand: true,

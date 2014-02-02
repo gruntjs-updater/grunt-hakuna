@@ -75,4 +75,7 @@ exports.hakuna = {
   default_options: function(test) {
     filesMatchTest(test, 'tmp/default_options/', 'test/expected/default_options/');
   },
+  copyFiles_false: function(test) {
+    filesMatchTest(test, 'tmp/copyFiles_false/', 'test/expected/copyFiles_false/');
+  },
 };

@@ -19,6 +19,13 @@ exports.init = function(grunt) {
     var inputDirectory  = params.inputDirectory;
     var outputDirectory = params.outputDirectory;
 
+    // Optionally handle the copying of js and css files from source to dest
+    // as part of a concatenated file or as-is. There may be workflows where
+    // you may want to manage this yourself, and it also makes it nicer to test
+    // this function without worrying about side effects.
+    // Default to true.
+    var copyFiles = params.copyFiles === undefined ? true : params.copyFiles;
+
     var output = '';
     var htmlparser = require("htmlparser2");
 
@@ -46,7 +53,9 @@ exports.init = function(grunt) {
             output += cssTagFor(concatFilename);
           }
 
-          concatFiles(files, concatFilename, inputDirectory, outputDirectory);
+          if (copyFiles) {
+            concatFiles(files, concatFilename, inputDirectory, outputDirectory);
+          }
 
           files = [];
           exitBlock();
@@ -70,7 +79,8 @@ exports.init = function(grunt) {
           } else {
             // It's valid to have javascript or css that isn't in a block--
             // pass their tags and file contents through unscathed.
-            transferFileAsIs(attribs, inputDirectory, outputDirectory);
+            if(copyFiles) {
+              transferFileAsIs(attribs, inputDirectory, outputDirectory);                   }
             output += toTag(name, attribs);
           }
         } else {
