@@ -61,8 +61,11 @@ exports.init = function(grunt) {
           files = [];
           exitBlock();
           concatFile = '';
+
         } else {
-          output += data;
+
+          output += toComment(data);
+
         }
       },
       onopentag: function(name, attribs){
@@ -161,6 +164,10 @@ exports.init = function(grunt) {
 
   var toClosingTag = function(name) {
     return '</' + name + '>';
+  }
+
+  var toComment = function(data) {
+    return '<!--' + data + '-->';
   }
 
   return exports;
