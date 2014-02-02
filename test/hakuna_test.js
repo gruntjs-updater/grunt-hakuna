@@ -23,6 +23,8 @@ var grunt = require('grunt');
 */
 
 var filesMatchTest = function(test, actualDirectory, expectedDirectory) {
+  var actualFilesTested = [];
+
   // Test that, for each file that is in the directory of files expected, a
   // corresponding actual file exists with the same content.
   grunt.file.recurse(expectedDirectory, function(a, r, subdir, filename){
@@ -34,6 +36,8 @@ var filesMatchTest = function(test, actualDirectory, expectedDirectory) {
     var expectedFilepath = expectedDirectory + expectedFilename;
     var actualFilepath   = actualDirectory + expectedFilename;
 
+    actualFilesTested.push(actualFilepath);
+
     var actualExists = grunt.file.exists(actualFilepath);
     test.ok(actualExists, actualFilepath + ' does not exist.');
 
@@ -44,6 +48,20 @@ var filesMatchTest = function(test, actualDirectory, expectedDirectory) {
       test.equal(actual, expected, 'The content of ' + actualFilepath + ' is not correct.');
     }
   });
+
+  // Test that there aren't any extra files in the actual directory that don't
+  // exist in the expected directory.
+
+  var extraFiles = grunt.file.expand(
+    {
+      filter: function(src) {
+        return grunt.file.isFile(src) && actualFilesTested.indexOf(src) === -1;
+      }
+    },
+    actualDirectory + '**/*'
+  );
+
+  test.equal(extraFiles.length, 0, 'These files exist in the actual output but are not expected: ' + extraFiles.join(', '));
 
   test.done();
 
