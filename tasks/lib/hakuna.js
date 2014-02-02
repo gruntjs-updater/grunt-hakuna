@@ -14,9 +14,7 @@ exports.init = function(grunt) {
 
   var state = '';
 
-  exports.processHTML = function(htmlFile, outputDirectory) {
-
-    var inputDirectory = path.dirname(htmlFile);
+  exports.processHTML = function(inputHTML, inputDirectory, outputDirectory) {
 
     var output = '';
     var htmlparser = require("htmlparser2");
@@ -94,7 +92,7 @@ exports.init = function(grunt) {
         }
       }
     });
-    parser.write(grunt.file.read(htmlFile));
+    parser.write(inputHTML);
     parser.end();
 
     return output;
