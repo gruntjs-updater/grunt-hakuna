@@ -69,7 +69,7 @@ exports.init = function(grunt) {
         }
       },
       onopentag: function(name, attribs){
-        if((name === "script" && attribs.type === "text/javascript") || (name === "link" && attribs.rel === 'stylesheet')) {
+        if(javascriptOrStylesheetTag(name, attribs)) {
           if (withinABlock()) {
             updateBlockType(name);
             addFilenameToConcatList(files, attribs);
@@ -91,7 +91,8 @@ exports.init = function(grunt) {
       onclosetag: function(name){
         // Tags we're interested in modifying, we'll take care of closing
         // elsewhere. Tags we're not modifying should get closed here.
-        if((name.match(/^(script|link)$/) && outsideABlock()) || !name.match(/^(script|link)$/)){
+        var jsOrCss = javascriptOrStylesheetClosingTag(name);
+        if( (jsOrCss && outsideABlock()) || !jsOrCss ) {
           output += toClosingTag(name);
         }
       }
@@ -112,7 +113,7 @@ exports.init = function(grunt) {
 
   var filenameFromBlockComment = function(data) {
     return data.match(/build ([^ ]*)/)[1];
-  }
+  };
 
   var withinABlock = function() {
     return state !== ''
@@ -178,11 +179,19 @@ exports.init = function(grunt) {
 
   var toClosingTag = function(name) {
     return '</' + name + '>';
-  }
+  };
 
   var toComment = function(data) {
     return '<!--' + data + '-->';
-  }
+  };
+
+  var javascriptOrStylesheetTag = function(name, attribs) {
+    return (name === "script" && attribs.type === "text/javascript") || (name === "link" && attribs.rel === 'stylesheet');
+  };
+
+  var javascriptOrStylesheetClosingTag = function(name) {
+    return name.match(/^(script|link)$/);
+  };
 
   return exports;
 };
