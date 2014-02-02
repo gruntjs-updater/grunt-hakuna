@@ -27,11 +27,12 @@ exports.init = function(grunt) {
 
     var parser = new htmlparser.Parser({
       oncomment: function(data){
-        if(outsideABlock() && data.match(/build/)) {
-          enterBlock();
-          concatFilename = data.match(/build ([^ ]*)/)[1];
+        if(outsideABlock() && startingBlockComment(data)) {
 
-        } else if(withinABlock() && data.match(/\/build/)) {
+          enterBlock();
+          concatFilename = filenameFromBlockComment(data);
+
+        } else if(withinABlock() && endingBlockComment(data)) {
 
           if(withinAJavaScriptBlock()) {
 
@@ -105,6 +106,18 @@ exports.init = function(grunt) {
 
     return output;
   };
+
+  var startingBlockComment = function(data) {
+    return data.match(/[^\/]build/);
+  };
+
+  var endingBlockComment = function(data) {
+    return data.match(/\/build/);
+  };
+
+  var filenameFromBlockComment = function(data) {
+    return data.match(/build ([^ ]*)/)[1];
+  }
 
   var withinABlock = function() {
     return state !== ''
