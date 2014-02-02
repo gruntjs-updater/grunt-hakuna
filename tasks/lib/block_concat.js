@@ -12,6 +12,8 @@ var path = require('path');
 exports.init = function(grunt) {
   var exports = {};
 
+  var state = '';
+
   exports.processHTML = function(htmlFile, outputDirectory) {
 
     var inputDirectory = path.dirname(htmlFile);
@@ -19,7 +21,6 @@ exports.init = function(grunt) {
     var output = '';
     var htmlparser = require("htmlparser2");
 
-    var state = '';
     var concatFilename;
     var concatFile = '';
     var files = [];
@@ -27,14 +28,14 @@ exports.init = function(grunt) {
     var parser = new htmlparser.Parser({
       oncomment: function(data){
         if(outsideABlock() && data.match(/build/)) {
-          state = 'inside';
+          enterBlock();
           concatFilename = data.match(/build ([^ ]*)/)[1];
 
         } else if(withinABlock() && data.match(/\/build/)) {
 
-          if(state === 'script') {
+          if(withinAJavaScriptBlock()) {
             output += '<script type="text/javascript" src="' + concatFilename + '"></script>';
-          } else if(state === 'link') {
+          } else if(withinACssBlock()) {
             output += '<link rel="stylesheet" href="' + concatFilename + '"></link>';
           }
 
@@ -45,7 +46,7 @@ exports.init = function(grunt) {
           grunt.file.write(path.join(outputDirectory, concatFilename), concatFile.trim());
 
           files = [];
-          state = '';
+          exitBlock();
           concatFile = '';
         } else {
           output += data;
@@ -54,7 +55,7 @@ exports.init = function(grunt) {
       onopentag: function(name, attribs){
         if(name === "script" && attribs.type === "text/javascript") {
           if (withinABlock()) {
-            state = name;
+            updateBlockType(name);
             files.push(attribs.src);
           } else {
             grunt.file.write(path.join(outputDirectory, attribs.src), grunt.file.read(path.join(inputDirectory, attribs.src)));
@@ -62,7 +63,7 @@ exports.init = function(grunt) {
           }
         } else if (name === "link" && attribs.rel === 'stylesheet') {
           if (withinABlock()) {
-            state = name;
+            updateBlockType(name);
             files.push(attribs.href);
           } else {
             grunt.file.write(path.join(outputDirectory, attribs.href), grunt.file.read(path.join(inputDirectory, attribs.href)));
@@ -91,15 +92,35 @@ exports.init = function(grunt) {
     parser.end();
 
     return output;
-  }
+  };
 
   var withinABlock = function() {
     return state !== ''
-  }
+  };
 
   var outsideABlock = function() {
     return state === ''
-  }
+  };
+
+  var withinAJavaScriptBlock = function() {
+    return state === 'script';
+  };
+
+  var withinACssBlock = function() {
+    return state === 'link';
+  };
+
+  var enterBlock = function() {
+    state = 'unknownTypeUntilWeSeeWhatLiesWithin';
+  };
+
+  var updateBlockType = function(blockType) {
+    state = blockType;
+  };
+
+  var exitBlock = function() {
+    state = '';
+  };
 
   var toTag = function(name, attribs) {
     var tag = '<';
@@ -111,7 +132,7 @@ exports.init = function(grunt) {
     }
     tag += '>';
     return tag;
-  }
+  };
 
   return exports;
 };
