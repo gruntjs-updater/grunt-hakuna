@@ -1,6 +1,6 @@
 /*
- * grunt-block-concat
- * https://github.com/carols10cents/grunt-block-concat
+ * grunt-hakuna
+ * https://github.com/carols10cents/grunt-hakuna
  *
  * Copyright (c) 2014 Carol Nichols and Rob Wierzbowski
  * Licensed under the MIT license.
@@ -29,10 +29,8 @@ module.exports = function(grunt) {
     },
 
     // Configuration to be run (and then tested).
-    blockConcat: {
+    hakuna: {
       default_options: {
-        options: {
-        },
         files: [{
           expand: true,
           cwd: 'test/fixtures/project1',
@@ -66,7 +64,7 @@ module.exports = function(grunt) {
 
   // Whenever the "test" task is run, first clean the "tmp" dir, then run this
   // plugin's task(s), then test the result.
-  grunt.registerTask('test', ['clean', 'blockConcat', 'nodeunit']);
+  grunt.registerTask('test', ['clean', 'hakuna', 'nodeunit']);
 
   // By default, lint and run all tests.
   grunt.registerTask('default', ['jshint', 'test']);

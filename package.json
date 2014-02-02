@@ -1,23 +1,23 @@
 {
-  "name": "grunt-block-concat",
+  "name": "grunt-hakuna",
   "description": "Concats files specified in blocks in HTML and replaces the reference to the new file. Uses an HTML parser rather than regex.",
   "version": "0.1.0",
-  "homepage": "https://github.com/carols10cents/grunt-block-concat",
+  "homepage": "https://github.com/carols10cents/grunt-hakuna",
   "author": {
     "name": "Carol Nichols and Rob Wierzbowski",
     "email": "carol.nichols@gmail.com, rob.wierzbowski@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/carols10cents/grunt-block-concat.git"
+    "url": "git://github.com/carols10cents/grunt-hakuna.git"
   },
   "bugs": {
-    "url": "https://github.com/carols10cents/grunt-block-concat/issues"
+    "url": "https://github.com/carols10cents/grunt-hakuna/issues"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/carols10cents/grunt-block-concat/blob/master/LICENSE-MIT"
+      "url": "https://github.com/carols10cents/grunt-hakuna/blob/master/LICENSE-MIT"
     }
   ],
   "engines": {

@@ -1,6 +1,6 @@
 /*
- * grunt-block-concat
- * https://github.com/carols10cents/grunt-block-concat
+ * grunt-hakuna
+ * https://github.com/carols10cents/grunt-hakuna
  *
  * Copyright (c) 2014 Carol Nichols and Rob Wierzbowski
  * Licensed under the MIT license.
@@ -10,13 +10,13 @@
 var path = require('path');
 
 module.exports = function(grunt) {
-  var blockConcat = require('./lib/block_concat').init(grunt);
+  var hakuna = require('./lib/hakuna').init(grunt);
 
 
   // Please see the Grunt documentation for more information regarding task
   // creation: http://gruntjs.com/creating-tasks
 
-  grunt.registerMultiTask('blockConcat', 'Concats files specified in blocks in HTML and replaces the reference to the new file. Uses an HTML parser rather than regex.', function() {
+  grunt.registerMultiTask('hakuna', 'Concats files specified in blocks in HTML and replaces the reference to the new file. Uses an HTML parser rather than regex.', function() {
 
     // Iterate over all specified file groups.
     this.files.forEach(function(f) {
@@ -31,7 +31,7 @@ module.exports = function(grunt) {
       });
 
       src.forEach(function(htmlFile){
-        var newHTML = blockConcat.processHTML(htmlFile, path.dirname(f.dest));
+        var newHTML = hakuna.processHTML(htmlFile, path.dirname(f.dest));
         grunt.file.write(f.dest, newHTML);
         grunt.log.writeln('File "' + f.dest + '" created.');
       });

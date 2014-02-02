@@ -1,6 +1,8 @@
-# grunt-block-concat
+# grunt-hakuna
 
 > Concats files specified in blocks in HTML and replaces the reference to the new file. Uses an HTML parser rather than regex.
+
+When used with [grunt-matata](https://github.com/carols10cents/grunt-matata), it means no worries for the rest of your days.
 
 ## Getting Started
 This plugin requires Grunt `~0.4.2`
@@ -8,18 +10,18 @@ This plugin requires Grunt `~0.4.2`
 If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:
 
 ```shell
-npm install grunt-block-concat --save-dev
+npm install grunt-hakuna --save-dev
 ```
 
 Once the plugin has been installed, it may be enabled inside your Gruntfile with this line of JavaScript:
 
 ```js
-grunt.loadNpmTasks('grunt-block-concat');
+grunt.loadNpmTasks('grunt-hakuna');
 ```
 
-## The "blockConcat" task
+## The "hakuna" task
 
-`blockConcat` parses your HTML file(s) with an HTML parser and looks for comments that surround a group of JavaScript or CSS references. It will then:
+`hakuna` parses your HTML file(s) with an HTML parser and looks for comments that surround a group of JavaScript or CSS references. It will then:
 
   1. Concat the files referenced in that block
   1. Write the result to the one filename referenced in the block config
@@ -36,7 +38,7 @@ The block configuration is similar to those in [usemin](https://github.com/yeoma
 ```html
 <!-- build <path> -->
 ... HTML Markup, list of script / link tags.
-<!-- endbuild -->
+<!-- /build -->
 ```
 
 - **path**: the file path, including filename, of the resulting file (the target output of concat)
@@ -49,7 +51,7 @@ An example of this in completed form can be seen below:
 <script src="js/controllers/thing-controller.js"></script>
 <script src="js/models/thing-model.js"></script>
 <script src="js/views/thing-view.js"></script>
-<!-- endbuild -->
+<!-- /build -->
 ```
 
 After running the task, this will be modified to be:
@@ -58,11 +60,11 @@ After running the task, this will be modified to be:
 ````
 
 ### Overview
-In your project's Gruntfile, add a section named `blockConcat` to the data object passed into `grunt.initConfig()`.
+In your project's Gruntfile, add a section named `hakuna` to the data object passed into `grunt.initConfig()`.
 
 ```js
 grunt.initConfig({
-  blockConcat: {
+  hakuna: {
     options: {
       // Task-specific options go here.
     },
@@ -79,14 +81,12 @@ There are no options at this time.
 
 ### Usage Examples
 
-Please see test/fixtures/project1 for an example project, and see test/expected/project1 for the output of running this blockConcat config on that project:
+Please see test/fixtures/project1 for an example project, and see test/expected/project1 for the output of running this hakuna config on that project:
 
 ```js
 grunt.initConfig({
-  blockConcat: {
+  hakuna: {
     default_options: {
-      options: {
-      },
       files: [{
         expand: true,
         cwd: 'test/fixtures/project1',

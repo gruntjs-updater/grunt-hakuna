@@ -1,6 +1,6 @@
 /*
-* grunt-block-concat
-* https://github.com/carols10cents/grunt-block-concat
+* grunt-hakuna
+* https://github.com/carols10cents/grunt-hakuna
 *
 * Copyright (c) 2014 Carol Nichols and Rob Wierzbowski
 * Licensed under the MIT license.

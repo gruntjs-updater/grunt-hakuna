@@ -22,7 +22,7 @@ var grunt = require('grunt');
     test.ifError(value)
 */
 
-exports.blockConcat = {
+exports.hakuna = {
   setUp: function(done) {
     // setup here if necessary
     done();
