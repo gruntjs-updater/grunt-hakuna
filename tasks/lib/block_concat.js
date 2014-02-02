@@ -26,11 +26,11 @@ exports.init = function(grunt) {
 
     var parser = new htmlparser.Parser({
       oncomment: function(data){
-        if(state === '' && data.match(/build/)) {
+        if(outsideABlock() && data.match(/build/)) {
           state = 'inside';
           concatFilename = data.match(/build ([^ ]*)/)[1];
 
-        } else if(state !== '' && data.match(/\/build/)) {
+        } else if(withinABlock() && data.match(/\/build/)) {
 
           if(state === 'script') {
             output += '<script type="text/javascript" src="' + concatFilename + '"></script>';
@@ -53,7 +53,7 @@ exports.init = function(grunt) {
       },
       onopentag: function(name, attribs){
         if(name === "script" && attribs.type === "text/javascript") {
-          if (state !== '') {
+          if (withinABlock()) {
             state = name;
             files.push(attribs.src);
           } else {
@@ -61,7 +61,7 @@ exports.init = function(grunt) {
             output += toTag(name, attribs);
           }
         } else if (name === "link" && attribs.rel === 'stylesheet') {
-          if (state !== '') {
+          if (withinABlock()) {
             state = name;
             files.push(attribs.href);
           } else {
@@ -73,12 +73,16 @@ exports.init = function(grunt) {
         }
       },
       ontext: function(text){
-        if (state === '') {
+        // We want to get rid of whitespace within a block, which gets treated
+        // as text content. So only transfer text when outside a block.
+        if (outsideABlock()) {
           output += text;
         }
       },
       onclosetag: function(tagname){
-        if((tagname.match(/^(script|link)$/) && state === '') || !tagname.match(/^(script|link)$/)){
+        // Tags we're interested in modifying, we'll take care of closing
+        // elsewhere. Tags we're not modifying should get closed here.
+        if((tagname.match(/^(script|link)$/) && outsideABlock()) || !tagname.match(/^(script|link)$/)){
           output += '</' + tagname + ">";
         }
       }
@@ -87,6 +91,14 @@ exports.init = function(grunt) {
     parser.end();
 
     return output;
+  }
+
+  var withinABlock = function() {
+    return state !== ''
+  }
+
+  var outsideABlock = function() {
+    return state === ''
   }
 
   var toTag = function(name, attribs) {
