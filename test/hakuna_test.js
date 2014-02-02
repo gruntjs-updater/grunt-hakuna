@@ -22,21 +22,26 @@ var grunt = require('grunt');
     test.ifError(value)
 */
 
-var filesMatchTest = function(test, tmp, fixtures) {
-  grunt.file.recurse(fixtures, function(abspath, rootdir, subdir, filename){
-    var file = filename;
+var filesMatchTest = function(test, actualDirectory, expectedDirectory) {
+  // Test that, for each file that is in the directory of files expected, a
+  // corresponding actual file exists with the same content.
+  grunt.file.recurse(expectedDirectory, function(a, r, subdir, filename){
+    var expectedFilename = filename;
     if (subdir) {
-      file = subdir + '/' + file;
+      expectedFilename = subdir + '/' + expectedFilename;
     }
 
-    var actualExists = grunt.file.exists(tmp + file);
-    test.ok(actualExists, tmp + file + ' does not exist.');
+    var expectedFilepath = expectedDirectory + expectedFilename;
+    var actualFilepath   = actualDirectory + expectedFilename;
+
+    var actualExists = grunt.file.exists(actualFilepath);
+    test.ok(actualExists, actualFilepath + ' does not exist.');
 
     if(actualExists) {
-      var actual   = grunt.file.read(tmp + file);
-      var expected = grunt.file.read(fixtures + file);
+      var actual   = grunt.file.read(actualFilepath);
+      var expected = grunt.file.read(expectedFilepath);
 
-      test.equal(actual, expected, 'The content of ' + tmp + file + ' is not correct.');
+      test.equal(actual, expected, 'The content of ' + actualFilepath + ' is not correct.');
     }
   });
 
