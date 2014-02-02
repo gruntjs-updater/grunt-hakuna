@@ -22,33 +22,34 @@ var grunt = require('grunt');
     test.ifError(value)
 */
 
+var filesMatchTest = function(test, tmp, fixtures) {
+  grunt.file.recurse(fixtures, function(abspath, rootdir, subdir, filename){
+    var file = filename;
+    if (subdir) {
+      file = subdir + '/' + file;
+    }
+
+    var actualExists = grunt.file.exists(tmp + file);
+    test.ok(actualExists, tmp + file + ' does not exist.');
+
+    if(actualExists) {
+      var actual   = grunt.file.read(tmp + file);
+      var expected = grunt.file.read(fixtures + file);
+
+      test.equal(actual, expected, 'The content of ' + tmp + file + ' is not correct.');
+    }
+  });
+
+  test.done();
+
+};
+
 exports.hakuna = {
   setUp: function(done) {
     // setup here if necessary
     done();
   },
   default_options: function(test) {
-
-    var tmp      = 'tmp/default_options/';
-    var fixtures = 'test/expected/default_options/';
-
-    grunt.file.recurse(fixtures, function(abspath, rootdir, subdir, filename){
-      var file = filename;
-      if (subdir) {
-        file = subdir + '/' + file;
-      }
-
-      var actualExists = grunt.file.exists(tmp + file);
-      test.ok(actualExists, tmp + file + ' does not exist.');
-
-      if(actualExists) {
-        var actual   = grunt.file.read(tmp + file);
-        var expected = grunt.file.read(fixtures + file);
-
-        test.equal(actual, expected, 'The content of ' + tmp + file + ' is not correct.');
-      }
-    });
-
-    test.done();
+    filesMatchTest(test, 'tmp/default_options/', 'test/expected/default_options/');
   },
 };
