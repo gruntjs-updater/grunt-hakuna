@@ -14,7 +14,10 @@ exports.init = function(grunt) {
 
   var state = '';
 
-  exports.processHTML = function(inputHTML, inputDirectory, outputDirectory) {
+  exports.processHTML = function(params) {
+    var inputHTML       = params.inputHTML;
+    var inputDirectory  = params.inputDirectory;
+    var outputDirectory = params.outputDirectory;
 
     var output = '';
     var htmlparser = require("htmlparser2");

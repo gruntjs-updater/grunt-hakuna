@@ -31,13 +31,11 @@ module.exports = function(grunt) {
       });
 
       src.forEach(function(htmlFile){
-        var inputDirectory = path.dirname(htmlFile);
-        var inputHTML = grunt.file.read(htmlFile);
-        var outputHTML = hakuna.processHTML(
-          inputHTML,
-          inputDirectory,
-          path.dirname(f.dest)
-        );
+        var outputHTML = hakuna.processHTML({
+          inputHTML:       grunt.file.read(htmlFile),
+          inputDirectory:  path.dirname(htmlFile),
+          outputDirectory: path.dirname(f.dest)
+        });
         grunt.file.write(f.dest, outputHTML);
         grunt.log.writeln('File "' + f.dest + '" created.');
       });
