@@ -34,9 +34,21 @@ exports.init = function(grunt) {
         } else if(withinABlock() && data.match(/\/build/)) {
 
           if(withinAJavaScriptBlock()) {
-            output += '<script type="text/javascript" src="' + concatFilename + '"></script>';
+
+            output += toTag('script', {
+              type: 'text/javascript',
+              src:  concatFilename
+            });
+            output += toClosingTag('script');
+
           } else if(withinACssBlock()) {
-            output += '<link rel="stylesheet" href="' + concatFilename + '"></link>';
+
+            output += toTag('link', {
+              rel:  "stylesheet",
+              href: concatFilename
+            });
+            output += toClosingTag('link');
+
           }
 
           files.forEach(function (f){
@@ -80,11 +92,11 @@ exports.init = function(grunt) {
           output += text;
         }
       },
-      onclosetag: function(tagname){
+      onclosetag: function(name){
         // Tags we're interested in modifying, we'll take care of closing
         // elsewhere. Tags we're not modifying should get closed here.
-        if((tagname.match(/^(script|link)$/) && outsideABlock()) || !tagname.match(/^(script|link)$/)){
-          output += '</' + tagname + ">";
+        if((name.match(/^(script|link)$/) && outsideABlock()) || !name.match(/^(script|link)$/)){
+          output += toClosingTag(name);
         }
       }
     });
@@ -133,6 +145,10 @@ exports.init = function(grunt) {
     tag += '>';
     return tag;
   };
+
+  var toClosingTag = function(name) {
+    return '</' + name + '>';
+  }
 
   return exports;
 };
