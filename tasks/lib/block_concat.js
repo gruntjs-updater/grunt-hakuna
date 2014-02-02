@@ -69,20 +69,12 @@ exports.init = function(grunt) {
         }
       },
       onopentag: function(name, attribs){
-        if(name === "script" && attribs.type === "text/javascript") {
+        if((name === "script" && attribs.type === "text/javascript") || (name === "link" && attribs.rel === 'stylesheet')) {
           if (withinABlock()) {
             updateBlockType(name);
-            files.push(attribs.src);
+            addFilenameToConcatList(files, attribs);
           } else {
-            grunt.file.write(path.join(outputDirectory, attribs.src), grunt.file.read(path.join(inputDirectory, attribs.src)));
-            output += toTag(name, attribs);
-          }
-        } else if (name === "link" && attribs.rel === 'stylesheet') {
-          if (withinABlock()) {
-            updateBlockType(name);
-            files.push(attribs.href);
-          } else {
-            grunt.file.write(path.join(outputDirectory, attribs.href), grunt.file.read(path.join(inputDirectory, attribs.href)));
+            transferFileAsIs(attribs, inputDirectory, outputDirectory);
             output += toTag(name, attribs);
           }
         } else {
@@ -148,6 +140,28 @@ exports.init = function(grunt) {
 
   var exitBlock = function() {
     state = '';
+  };
+
+  var addFilenameToConcatList = function(files, attribs) {
+    if (attribs.src) {
+      files.push(attribs.src);
+    } else if (attribs.href) {
+      files.push(attribs.href);
+    }
+  };
+
+  var transferFileAsIs = function(attribs, inputDirectory, outputDirectory) {
+    var name = '';
+    if (attribs.src) {
+      name = attribs.src;
+    } else if (attribs.href) {
+      name = attribs.href;
+    }
+
+    var inputFilename = path.join(inputDirectory, name);
+    var outputFilename = path.join(outputDirectory, name);
+
+    grunt.file.write(outputFilename, grunt.file.read(inputFilename));
   };
 
   var toTag = function(name, attribs) {
