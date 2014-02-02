@@ -35,6 +35,9 @@
   "peerDependencies": {
     "grunt": "~0.4.2"
   },
+  "dependencies": {
+    "htmlparser2": "~3.4.0"
+  },
   "keywords": [
     "gruntplugin"
   ]
