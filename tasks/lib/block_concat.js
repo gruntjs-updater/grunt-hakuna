@@ -24,14 +24,20 @@ exports.init = function(grunt) {
     var concatFilename;
     var files = [];
 
+    // This parser operates as a sort of state machine. As we get to various
+    // parts of the HTML that we're processing, we do different things based
+    // on if we're within a build block or not and based on what we have just
+    // encountered.
     var parser = new htmlparser.Parser({
       oncomment: function(data){
         if(outsideABlock() && startingBlockComment(data)) {
+          // Start of a block comment
 
           enterBlock();
           concatFilename = filenameFromBlockComment(data);
 
         } else if(withinABlock() && endingBlockComment(data)) {
+          // End of a block comment
 
           if(withinAJavaScriptBlock()) {
             output += javascriptTagFor(concatFilename);
@@ -45,21 +51,30 @@ exports.init = function(grunt) {
           exitBlock();
 
         } else {
-
+          // Not a block comment - pass through unscathed whether we're in a
+          // block or not
           output += toComment(data);
-
         }
       },
       onopentag: function(name, attribs){
         if(javascriptOrStylesheetTag(name, attribs)) {
           if (withinABlock()) {
+            // Instead of parsing the block comment filename to figure out the
+            // kind of block we're in, rely on the tags within a block to tell
+            // us. Mixing CSS and JS within one block is invalid, so it doesn't
+            // matter that we're overwriting the stored block type every time
+            // we encounter a tag within a block.
             updateBlockType(name);
             addFilenameToConcatList(files, attribs);
           } else {
+            // It's valid to have javascript or css that isn't in a block--
+            // pass their tags and file contents through unscathed.
             transferFileAsIs(attribs, inputDirectory, outputDirectory);
             output += toTag(name, attribs);
           }
         } else {
+          // Not a javascript or css tag - pass through unscathed whether we're
+          // in a block or not.
           output += toTag(name, attribs);
         }
       },
@@ -97,6 +112,7 @@ exports.init = function(grunt) {
     return data.match(/build ([^ ]*)/)[1];
   };
 
+  // withinABlock should be the opposite of outsideABlock.
   var withinABlock = function() {
     return state !== ''
   };
