@@ -2,10 +2,7 @@
 var hakuna = require('../tasks/lib/hakuna.js').init({});
 
 exports.hakuna = {
-  setUp: function(done) {
-    // setup here if necessary
-    done();
-  },
+
   useminApi: function(test) {
     var input = ['<!-- build:js js/app.js -->',
                  '<script src="js/app.js"></script>',
@@ -19,5 +16,18 @@ exports.hakuna = {
     });
     test.equal(output, '<script type="text/javascript" src="js/app.js"></script>');
     test.done();
+  },
+
+  windowsNewlines: function(test) {
+    var input = ['<!-- build styles/homepage.css -->',
+                 '<link rel="stylesheet" href="styles/main.css" />',
+                 '<link rel="stylesheet" href="styles/blog.css" />',
+                 '<!-- /build -->'].join('\r\n');
+     var output = hakuna.processHTML({
+       inputHTML: input,
+       copyFiles: false
+     });
+     test.equal(output, '<link rel="stylesheet" href="styles/homepage.css"></link>');
+     test.done();
   },
 };
