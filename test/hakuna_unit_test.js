@@ -30,4 +30,15 @@ exports.hakuna = {
      test.equal(output, '<link rel="stylesheet" href="styles/homepage.css"></link>');
      test.done();
   },
+
+  noNewLines: function(test) {
+    var input = '<p>This will not disappear.</p><!-- build foo.js --><script src="bar.js"></script><!-- /build -->';
+    var output = hakuna.processHTML({
+      inputHTML: input,
+      copyFiles: false
+    });
+    test.equal(output, '<p>This will not disappear.</p><script type="text/javascript" src="foo.js"></script>');
+    test.done();
+  },
+
 };
