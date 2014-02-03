@@ -41,4 +41,37 @@ exports.hakuna = {
     test.done();
   },
 
+  ieConditionalsOutside: function(test) {
+    var input = ['<!--[if IE 8]>',
+                 '<!-- build styles/ie.css -->',
+                 '<link rel="stylesheet" href="styles/one.css"></link>',
+                 '<!-- /build -->',
+                 '<![endif]-->'].join('\n');
+     var output = hakuna.processHTML({
+       inputHTML: input,
+       copyFiles: false
+     });
+     test.equal(output, ['<!--[if IE 8]>',
+                         '<link rel="stylesheet" href="styles/ie.css"></link>',
+                         '<![endif]-->'].join('\n'));
+     test.done();
+  },
+
+  ieConditionalsInside: function(test) {
+    var input = ['<!-- build styles/ie.css -->',
+                 '<!--[if IE 8]>',
+                 '<link rel="stylesheet" href="styles/one.css"></link>',
+                 '<![endif]-->',
+                 '<!-- /build -->'].join('\n');
+     var output = hakuna.processHTML({
+       inputHTML: input,
+       copyFiles: false
+     });
+     test.equal(output, ['<!--[if IE 8]>',
+                         '<link rel="stylesheet" href="styles/ie.css"></link>',
+                         '<![endif]-->'].join('\n'));
+     test.done();
+
+  },
+
 };
