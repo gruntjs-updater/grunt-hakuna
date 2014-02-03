@@ -112,15 +112,15 @@ exports.init = function(grunt) {
   };
 
   var startingBlockComment = function(data) {
-    return data.match(/[^\/]build/);
+    return data.match(/^ *build/) && !endingBlockComment(data);
   };
 
   var endingBlockComment = function(data) {
-    return data.match(/\/build/);
+    return data.match(/(\/build|endbuild)/);
   };
 
   var filenameFromBlockComment = function(data) {
-    return data.match(/build ([^ ]*)/)[1];
+    return data.match(/build[^ ]* ([^ ]*)/)[1];
   };
 
   // withinABlock should be the opposite of outsideABlock.
@@ -222,7 +222,7 @@ exports.init = function(grunt) {
   };
 
   var javascriptOrStylesheetTag = function(name, attribs) {
-    return (name === "script" && attribs.type === "text/javascript") || (name === "link" && attribs.rel === 'stylesheet');
+    return (name === "script") || (name === "link" && attribs.rel === 'stylesheet');
   };
 
   var javascriptOrStylesheetClosingTag = function(name) {
