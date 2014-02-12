@@ -14,6 +14,10 @@ exports.init = function(grunt) {
 
   var state = '';
 
+  // This stores the end of an IE conditional comment that occurs within a
+  // build block. Most of the time this will be empty string.
+  var endConditionalComment = '';
+
   exports.processHTML = function(params) {
     var inputHTML       = params.inputHTML;
     var inputDirectory  = params.inputDirectory;
@@ -57,8 +61,29 @@ exports.init = function(grunt) {
             concatFiles(files, concatFilename, inputDirectory, outputDirectory);
           }
 
+          // If there's an IE conditional comment within this block, end it with
+          // the ending we stored earlier and reset this storage to empty string
+          output += endConditionalComment;
+          endConditionalComment = '';
+
           files = [];
           exitBlock();
+
+        } else if(withinABlock() && wholeIeConditionalComment(data)) {
+          // An IE conditional comment with its contents is wholly contained
+          // within a build block (and is the only contents of the build block).
+
+          // Pass the start of the IE conditional comment through
+          output += ieConditionalCommentStart(data);
+
+          // Store the end of the conditional comment for when we get to the end
+          // of the build block.
+          endConditionalComment = ieConditionalCommentEnd(data);
+
+          // Recursively parse the contents of the conditional comment.
+          output += exports.processHTML({
+            inputHTML: ieConditionalCommentContents(data)
+          });
 
         } else {
           // Not a block comment - pass through unscathed whether we're in a
@@ -121,6 +146,25 @@ exports.init = function(grunt) {
 
   var filenameFromBlockComment = function(data) {
     return data.match(/build[^ ]* ([^ ]*)/)[1];
+  };
+
+  var ieConditionalStartRegex = /(\[if.*\]>)/;
+  var ieConditionalEndRegex = /(<!\[endif\])/;
+
+  var wholeIeConditionalComment = function(data) {
+    return data.match(ieConditionalStartRegex) && data.match(ieConditionalEndRegex);
+  };
+
+  var ieConditionalCommentStart = function(data) {
+    return '<!--' + data.match(ieConditionalStartRegex)[1] + '\n';
+  };
+
+  var ieConditionalCommentEnd = function(data) {
+    return '\n' + data.match(ieConditionalEndRegex)[1] + '-->';
+  };
+
+  var ieConditionalCommentContents = function(data) {
+    return data.replace(ieConditionalStartRegex, '').replace(ieConditionalEndRegex, '');
   };
 
   // withinABlock should be the opposite of outsideABlock.
