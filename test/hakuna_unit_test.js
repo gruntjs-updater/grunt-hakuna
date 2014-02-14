@@ -41,11 +41,27 @@ exports.hakuna = {
     test.done();
   },
 
-  ieConditionalsOutside: function(test) {
+  ieConditionalsNoBlock: function(test) {
     var input = ['<!--[if IE 8]>',
-                 '<!-- build styles/ie.css -->',
+                 '<link rel="stylesheet" href="styles/nochange.css"></link>',
+                 '<![endif]-->'].join('\n');
+     var output = hakuna.processHTML({
+       inputHTML: input,
+       copyFiles: false
+     });
+     test.equal(output, ['<!--[if IE 8]>',
+                         '<link rel="stylesheet" href="styles/nochange.css"></link>',
+                         '<![endif]-->'].join('\n'));
+     test.done();
+  },
+
+  ieConditionalsOutside: function(test) {
+    // We can't end the build comments with --> in this case because that would
+    // also end the IE conditional comment.
+    var input = ['<!--[if IE 8]>',
+                 '<!-- build styles/ie.css --',
                  '<link rel="stylesheet" href="styles/one.css"></link>',
-                 '<!-- /build -->',
+                 '<!-- /build --',
                  '<![endif]-->'].join('\n');
      var output = hakuna.processHTML({
        inputHTML: input,

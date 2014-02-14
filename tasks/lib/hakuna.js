@@ -41,7 +41,7 @@ exports.init = function(grunt) {
     // Helper functions ========================================================
 
     var startingBlockComment = function(data) {
-      return data.match(/^ *build/) && !endingBlockComment(data);
+      return data.match(/^ *build/);
     };
 
     var endingBlockComment = function(data) {
@@ -220,7 +220,7 @@ exports.init = function(grunt) {
             files = [];
             exitBlock();
 
-          } else if(withinABlock() && wholeIeConditionalComment(data)) {
+          } else if(wholeIeConditionalComment(data) && withinABlock()) {
             // An IE conditional comment with its contents is wholly contained
             // within a build block (and is the only contents of the build block).
 
@@ -234,7 +234,21 @@ exports.init = function(grunt) {
             // Recursively parse the contents of the conditional comment.
             output += parseHTMLChunk(
               ieConditionalCommentContents(data),
-              false // The parent call will copy the files.
+              false // The parent call will copy since we're within a block.
+            );
+
+          } else if(wholeIeConditionalComment(data) && !withinABlock() && data.match(/build/)) {
+
+            output += ieConditionalCommentStart(data);
+
+            // Store the end of the conditional comment for when we get to the end
+            // of the build block.
+            endConditionalComment = ieConditionalCommentEnd(data);
+
+            // Recursively parse the contents of the conditional comment.
+            output += parseHTMLChunk(
+              ieConditionalCommentContents(data).replace(/[^!]--/, ' -->').trim(),
+              copyFiles // New build blocks should do what the parent call does
             );
 
           } else {
