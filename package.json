@@ -33,7 +33,7 @@
     "grunt": "~0.4.2"
   },
   "peerDependencies": {
-    "grunt": "~0.4.2"
+    "grunt": ">=0.4.0"
   },
   "dependencies": {
     "htmlparser2": "~3.4.0"
